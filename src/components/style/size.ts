@@ -1,3 +1,7 @@
+type Size = {
+    [key: string]: number
+}
+
 const size: Size = {
      xxxxp: 8,
      xxxp: 10,
@@ -9,11 +13,6 @@ const size: Size = {
      xg: 22,
      xxg: 24,
      xxxg: 26
-}
-
-
-type Size = {
-    [key: string]: number
 }
 
 

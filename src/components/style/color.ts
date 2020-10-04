@@ -1,3 +1,7 @@
+type Color = {
+  [key: string]: string
+}
+
 const fontColor: Color = {
   primary: "#202c41",
   border: "#c6c6c6",
@@ -7,8 +11,5 @@ const fontColor: Color = {
   success: "#50c356",
 };
 
-type Color = {
-  [key: string]: string
-}
 
 export { fontColor }
