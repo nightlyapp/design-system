@@ -7,11 +7,6 @@ import { Button } from "../../../src/components/button/Button";
 
 storiesOf("Button", module)
   .addDecorator(BufferView)
-  .add("default", () => (
-    <Button onPress={action("tapped-default")}>Press Me</Button>
+  .add("primario", () => (
+    <Button onPress={action("tapped-default")}>PARTIU!</Button>
   ))
-  .add("outline", () => (
-    <Button onPress={action("tapped-outline")} outline>
-      Press Me
-    </Button>
-  ));

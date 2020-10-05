@@ -1,31 +1,29 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 
-import {fontColor } from "../style/color";
+import { fontColor } from "../style/color";
+import { size } from "../style/size";
+import { LinearGradient } from "expo-linear-gradient";
+
+import { useFonts } from "expo-font";
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: fontColor.primary,
     paddingVertical: 14,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: fontColor.primary,
+    borderRadius: size.xxp,
     marginVertical: 7,
   },
   containerOutline: {
     backgroundColor: "transparent",
-    borderColor: fontColor.border,
   },
 
   text: {
     color: fontColor.white,
     alignSelf: "center",
-    fontSize: 18,
-    fontWeight: "500",
+    fontSize: size.xxxg,
+    fontFamily: "EnglishMedium",
   },
-  textOutline: {
-    color: fontColor.primary,
-  },
+  textOutline: {},
 });
 
 export const Button = ({
@@ -33,6 +31,14 @@ export const Button = ({
   children = "",
   outline = false,
 }) => {
+  const [loaded] = useFonts({
+    EnglishMedium: require("../font/EnglishMedium.otf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+
   const containerStyles: any[] = [styles.container];
   const textStyles: any[] = [styles.text];
 
@@ -42,8 +48,15 @@ export const Button = ({
   }
 
   return (
-    <TouchableOpacity onPress={onPress} style={containerStyles}>
-      <Text style={textStyles}>{children}</Text>
+    <TouchableOpacity onPress={onPress}>
+      <LinearGradient
+        colors={[fontColor.secondary, fontColor.primary]}
+        style={containerStyles}
+        start={{ x: 1.2, y: 0 }}
+        locations={[0, 0.8]}
+      >
+        <Text style={textStyles}>{children}</Text>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };

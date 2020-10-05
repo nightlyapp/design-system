@@ -3,12 +3,9 @@ type Color = {
 }
 
 const fontColor: Color = {
-  primary: "#202c41",
-  border: "#c6c6c6",
+  primary: "#8E2DE2",
+  secondary: "#4B01E0",
   white: "#fff",
-  gray: "#9ca5ab",
-  error: "#b55464",
-  success: "#50c356",
 };
 
 
