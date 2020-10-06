@@ -10,6 +10,3 @@ storiesOf("Titulo", module)
   .add("titulo h1", () => (
     <Title fontSize={'xxxg'} text={'Helio e Caio'} >Press Me</Title>
     ))
-    .add("Titulo Sucesso", () => (
-      <Title color="success" fontSize={'xxxg'} text={'Helio e Caio'} >Press Me</Title>
-  ));

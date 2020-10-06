@@ -1,8 +1,14 @@
 import React from "react";
 import { Text } from "react-native";
-import { fontColor } from "../style/color";
-import { size } from "../style/size";
+import { fontColor } from "../assets/style/color";
+import { size } from "../assets/style/size";
 import { useFonts } from "expo-font";
+
+type Title = {
+  text: string;
+  fontSize?: string;
+  color?: string;
+};
 
 const Title: React.FC<Title> = ({
   text = "",
@@ -10,7 +16,7 @@ const Title: React.FC<Title> = ({
   color = "primary",
 }) => {
   const [loaded] = useFonts({
-    EnglishMedium: require("../font/EnglishMedium.otf"),
+    EnglishMedium: require("../assets/font/EnglishMedium.otf"),
   });
 
   if (!loaded) {
@@ -31,9 +37,3 @@ const Title: React.FC<Title> = ({
 };
 
 export { Title };
-
-type Title = {
-  text: string;
-  fontSize?: string;
-  color?: string;
-};

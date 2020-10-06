@@ -1,15 +1,16 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 
-import { fontColor } from "../style/color";
-import { size } from "../style/size";
+import { fontColor } from "../assets/style/color";
+import { size } from "../assets/style/size";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { useFonts } from "expo-font";
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 14,
+    paddingVertical: size.xxp,
+    paddingHorizontal: size.xxp,
     borderRadius: size.xxp,
     marginVertical: 7,
   },
@@ -32,7 +33,7 @@ export const Button = ({
   outline = false,
 }) => {
   const [loaded] = useFonts({
-    EnglishMedium: require("../font/EnglishMedium.otf"),
+    EnglishMedium: require("../assets/font/EnglishMedium.otf"),
   });
 
   if (!loaded) {

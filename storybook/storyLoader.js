@@ -5,11 +5,15 @@
 
 function loadStories() {
   require("./stories/button/Button.stories");
+  require("./stories/distance/Distance.stories");
+  require("./stories/live/Live.stories");
   require("./stories/title/Title.stories");
 }
 
 const stories = [
   "./stories/button/Button.stories",
+  "./stories/distance/Distance.stories",
+  "./stories/live/Live.stories",
   "./stories/title/Title.stories",
 ];
 
