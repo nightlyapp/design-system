@@ -3,6 +3,8 @@ type Size = {
 }
 
 const size: Size = {
+     xxxxxxp: 4,
+     xxxxxp: 6,
      xxxxp: 8,
      xxxp: 10,
      xxp: 12,
