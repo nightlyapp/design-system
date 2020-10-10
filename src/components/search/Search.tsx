@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: fontColor.primary,
     borderRadius: size.xxg * 2,
+    overflow: "hidden",
   },
   textInput: {
     position: "absolute",
@@ -42,7 +43,19 @@ const styles = StyleSheet.create({
     fontSize: size.g,
     paddingLeft: size.xxg * 2,
     fontFamily: "EnglishMedium",
-    paddingRight: size.p,
+    paddingRight: size.m * 2,
+  },
+
+  closeIcon: {
+    width: size.xg * 2,
+    position: "absolute",
+    right: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    top: 0,
+    borderRadius: size.xxg * 2,
+    zIndex: 2,
   },
 });
 
@@ -55,6 +68,7 @@ const Search: React.FC<any> = ({
   placeholder = "Pesquisar",
   onKeyPress = () => {},
 }) => {
+  let textInput: TextInput | null;
   const minWidth = size.xxxxxg * 2;
   const [widthValue, setWidthValue] = React.useState(minWidth);
   const [borderValue, setBorderValue] = React.useState(0);
@@ -74,6 +88,25 @@ const Search: React.FC<any> = ({
     return null;
   }
 
+  const animationStructure = (
+    firstAnimation: Animated.Value,
+    lastAnimation: Animated.Value,
+    firtValue: number,
+    lastValue: number
+  ) => {
+    return Animated.timing(firstAnimation, {
+      toValue: firtValue,
+      duration: 50,
+      useNativeDriver: false,
+    }).start(() => {
+      Animated.timing(lastAnimation, {
+        toValue: lastValue,
+        duration: 50,
+        useNativeDriver: false,
+      }).start();
+    });
+  };
+
   const handleAnimate = (
     animatedWidth: Animated.Value,
     animatedBorder: Animated.Value,
@@ -81,31 +114,9 @@ const Search: React.FC<any> = ({
     borderAnim: number
   ) => {
     if (borderAnim == 1) {
-      Animated.timing(animatedBorder, {
-        toValue: borderAnim,
-        duration: 50,
-        useNativeDriver: false,
-      }).start(() => {
-        Animated.timing(animatedWidth, {
-          toValue: widthAnim,
-          duration: 50,
-          useNativeDriver: false,
-          easing: Easing.inOut(Easing.ease),
-        }).start();
-      });
+      animationStructure(animatedBorder, animatedWidth, borderAnim, widthAnim);
     } else {
-      Animated.timing(animatedWidth, {
-        toValue: widthAnim,
-        duration: 50,
-        useNativeDriver: false,
-        easing: Easing.inOut(Easing.ease),
-      }).start(() => {
-        Animated.timing(animatedBorder, {
-          toValue: borderAnim,
-          duration: 50,
-          useNativeDriver: false,
-        }).start();
-      });
+      animationStructure(animatedWidth, animatedBorder, widthAnim, borderAnim);
     }
   };
 
@@ -116,6 +127,10 @@ const Search: React.FC<any> = ({
     setWidthValue(widthAnimate);
     handleAnimate(animatedWidth, animatedBorder, widthAnimate, borderAnimate);
     setIsSearchOpen(!isSearchOpen);
+  };
+
+  const clearInputText = () => {
+    textInput?.clear();
   };
 
   return (
@@ -141,12 +156,22 @@ const Search: React.FC<any> = ({
         </TouchableWithoutFeedback>
         {isSearchOpen ? (
           <TextInput
+            ref={(input) => {
+              textInput = input;
+            }}
             onKeyPress={onKeyPress}
             placeholderTextColor={fontColor.placeholder}
             autoFocus={true}
             style={styles.textInput}
             placeholder={placeholder}
           ></TextInput>
+        ) : null}
+        {isSearchOpen ? (
+          <TouchableWithoutFeedback onPress={clearInputText}>
+            <View style={styles.closeIcon}>
+              <Ionicons name="md-close" size={size.xg} color="white" />
+            </View>
+          </TouchableWithoutFeedback>
         ) : null}
       </Animated.View>
     </View>
