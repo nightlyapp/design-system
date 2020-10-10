@@ -1,40 +1,48 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { fontColor } from "../assets/style/color";
 import { size } from "../assets/style/size";
-import { useFonts } from "expo-font";
+import { fontColor } from "../assets/style/color";
 
-import { Dimensions } from "react-native";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   text: {},
   iconContainer: {
-    backgroundColor: "#080715",
     width: size.xxxg * 2,
-    height: size.xxxg * 2,
     alignItems: "center",
-    justifyContent: "center",
     borderRadius: size.xxg * 2,
     zIndex: 2,
   },
   inputContainer: {
-    backgroundColor: "#080715",
     height: size.xxxxxg * 2,
-    position: "absolute",
-    top: -4,
-    left: -4,
     zIndex: 1,
-    borderWidth: 0,
-    borderColor: "#8E2DE2",
+    paddingLeft: 2,
+    borderWidth: 2,
+    justifyContent: "center",
+    borderColor: fontColor.primary,
     borderRadius: size.xxg * 2,
+  },
+  textInput: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    color: fontColor.white,
+    fontSize: size.g,
+    paddingLeft: size.xxg * 2,
+    fontFamily: "EnglishMedium",
+    paddingRight: size.p,
   },
 });
 
@@ -43,13 +51,20 @@ type Live = {
   musicGender: string;
 };
 
-const Search: React.FC<any> = () => {
+const Search: React.FC<any> = ({
+  placeholder = "Pesquisar",
+  onKeyPress = () => {},
+}) => {
   const minWidth = size.xxxxxg * 2;
-  const animatedWidth = React.useRef(new Animated.Value(minWidth)).current;
-  const animatedBorder = React.useRef(new Animated.Value(0)).current;
-
   const [widthValue, setWidthValue] = React.useState(minWidth);
   const [borderValue, setBorderValue] = React.useState(0);
+  const [animatedBorder] = React.useState(new Animated.Value(0));
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const animatedWidth = React.useRef(new Animated.Value(minWidth)).current;
+  const boxInterpolation = animatedBorder.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["transparent", fontColor.primary],
+  });
 
   const [loaded] = useFonts({
     EnglishMedium: require("../assets/font/EnglishMedium.otf"),
@@ -59,46 +74,81 @@ const Search: React.FC<any> = () => {
     return null;
   }
 
-  const handleAnimate = (widthAnim: number, borderAnim: number) => {
-    Animated.timing(animatedBorder, {
-      toValue: borderAnim,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-    Animated.timing(animatedWidth, {
-      toValue: widthAnim,
-      duration: 100,
-      useNativeDriver: false,
-    }).start();
+  const handleAnimate = (
+    animatedWidth: Animated.Value,
+    animatedBorder: Animated.Value,
+    widthAnim: number,
+    borderAnim: number
+  ) => {
+    if (borderAnim == 1) {
+      Animated.timing(animatedBorder, {
+        toValue: borderAnim,
+        duration: 50,
+        useNativeDriver: false,
+      }).start(() => {
+        Animated.timing(animatedWidth, {
+          toValue: widthAnim,
+          duration: 50,
+          useNativeDriver: false,
+          easing: Easing.inOut(Easing.ease),
+        }).start();
+      });
+    } else {
+      Animated.timing(animatedWidth, {
+        toValue: widthAnim,
+        duration: 50,
+        useNativeDriver: false,
+        easing: Easing.inOut(Easing.ease),
+      }).start(() => {
+        Animated.timing(animatedBorder, {
+          toValue: borderAnim,
+          duration: 50,
+          useNativeDriver: false,
+        }).start();
+      });
+    }
   };
 
   const clickToAnimate = () => {
-    const borderAnimate = borderValue === 0 ? 2 : 0;
-    const widthAnimate = widthValue === minWidth ? 200 : minWidth;
+    const borderAnimate = borderValue === 0 ? 1 : 0;
+    const widthAnimate = widthValue === minWidth ? 100 : minWidth;
     setBorderValue(borderAnimate);
     setWidthValue(widthAnimate);
-    handleAnimate(widthAnimate, borderAnimate);
+    handleAnimate(animatedWidth, animatedBorder, widthAnimate, borderAnimate);
+    setIsSearchOpen(!isSearchOpen);
   };
 
   return (
-    <View>
-      <View style={styles.iconContainer}>
-        <Ionicons
-          onPress={clickToAnimate}
-          name="md-search"
-          size={size.xxxxxg}
-          color="white"
-        />
-      </View>
+    <View
+      style={{
+        flex: 1,
+        height: size.xxxg * 2,
+      }}
+    >
       <Animated.View
         style={[
           styles.inputContainer,
           {
-            width: animatedWidth,
-            borderWidth: animatedBorder,
+            flex: animatedWidth,
+            borderColor: boxInterpolation,
           },
         ]}
-      ></Animated.View>
+      >
+        <TouchableWithoutFeedback onPress={clickToAnimate}>
+          <View style={styles.iconContainer}>
+            <Ionicons name="md-search" size={size.xxxxxg} color="white" />
+          </View>
+        </TouchableWithoutFeedback>
+        {isSearchOpen ? (
+          <TextInput
+            onKeyPress={onKeyPress}
+            placeholderTextColor={fontColor.placeholder}
+            autoFocus={true}
+            style={styles.textInput}
+            placeholder={placeholder}
+          ></TextInput>
+        ) : null}
+      </Animated.View>
     </View>
   );
 };
